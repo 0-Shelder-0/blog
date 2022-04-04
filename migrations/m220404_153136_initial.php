@@ -12,7 +12,7 @@ class m220404_153136_initial extends Migration
      */
     public function safeUp()
     {
-        $this->createTable('users', [
+        $this->createTable('user', [
             'id' => $this->primaryKey(),
             'login' => $this->string(),
             'password_hash' => $this->string(),
@@ -21,13 +21,13 @@ class m220404_153136_initial extends Migration
             'role_id' => $this->integer(),
         ]);
 
-        $this->createTable('roles', [
+        $this->createTable('role', [
             'id' => $this->primaryKey(),
             'name' => $this->string(),
             'claim' => $this->integer(),
         ]);
 
-        $this->createTable('posts', [
+        $this->createTable('post', [
             'id' => $this->primaryKey(),
             'title' => $this->string(),
             'content' => $this->string(),
@@ -37,17 +37,17 @@ class m220404_153136_initial extends Migration
             'category_id' => $this->integer(),
         ]);
 
-        $this->createTable('categories', [
+        $this->createTable('category', [
             'id' => $this->primaryKey(),
             'name' => $this->string(),
         ]);
 
-        $this->createTable('images', [
+        $this->createTable('image', [
             'id' => $this->primaryKey(),
             'url' => $this->string(),
         ]);
 
-        $this->createTable('comments', [
+        $this->createTable('comment', [
             'id' => $this->primaryKey(),
             'text' => $this->string(),
             'is_deleted' => $this->boolean(),
@@ -57,76 +57,76 @@ class m220404_153136_initial extends Migration
         ]);
 
         $this->createIndex(
-            'idx-users-role_id',
-            'users',
+            'idx-user-role_id',
+            'user',
             'role_id'
         );
 
         $this->createIndex(
-            'idx-posts-image_id',
-            'posts',
+            'idx-post-image_id',
+            'post',
             'image_id'
         );
 
         $this->createIndex(
-            'idx-posts-category_id',
-            'posts',
+            'idx-post-category_id',
+            'post',
             'category_id'
         );
 
         $this->createIndex(
-            'idx-comments-user_id',
-            'comments',
+            'idx-comment-user_id',
+            'comment',
             'user_id'
         );
 
         $this->createIndex(
-            'idx-comments-post_id',
-            'comments',
+            'idx-comment-post_id',
+            'comment',
             'post_id'
         );
 
         $this->addForeignKey(
-            'fk-users-role_id',
-            'users',
+            'fk-user-role_id',
+            'user',
             'role_id',
-            'roles',
+            'role',
             'id',
             'RESTRICT'
         );
 
         $this->addForeignKey(
-            'fk-posts-image_id',
-            'posts',
+            'fk-post-image_id',
+            'post',
             'image_id',
-            'images',
+            'image',
             'id',
             'RESTRICT'
         );
 
         $this->addForeignKey(
-            'fk-posts-category_id',
-            'posts',
+            'fk-post-category_id',
+            'post',
             'category_id',
-            'categories',
+            'category',
             'id',
             'RESTRICT'
         );
 
         $this->addForeignKey(
-            'fk-comments-user_id',
-            'comments',
+            'fk-comment-user_id',
+            'comment',
             'user_id',
-            'users',
+            'user',
             'id',
             'RESTRICT'
         );
 
         $this->addForeignKey(
-            'fk-comments-post_id',
-            'comments',
+            'fk-comment-post_id',
+            'comment',
             'post_id',
-            'posts',
+            'post',
             'id',
             'RESTRICT'
         );
@@ -137,16 +137,23 @@ class m220404_153136_initial extends Migration
      */
     public function safeDown()
     {
-        $this->dropIndex('idx-users-role_id', 'users');
-        $this->dropIndex('idx-posts-image_id', 'posts');
-        $this->dropIndex('idx-posts-category_id', 'posts');
-        $this->dropIndex('idx-comments-user_id', 'comments');
-        $this->dropIndex('idx-comments-post_id', 'comments');
+        $this->dropIndex('idx-user-role_id', 'user');
+        $this->dropIndex('idx-post-image_id', 'post');
+        $this->dropIndex('idx-post-category_id', 'post');
+        $this->dropIndex('idx-comment-user_id', 'comment');
+        $this->dropIndex('idx-comment-post_id', 'comment');
 
-        $this->dropTable('users');
-        $this->dropTable('users');
-        $this->dropTable('users');
-        $this->dropTable('users');
-        $this->dropTable('users');
+        $this->dropForeignKey('fk-user-role_id', 'user');
+        $this->dropForeignKey('fk-post-image_id', 'post');
+        $this->dropForeignKey('fk-post-category_id', 'post');
+        $this->dropForeignKey('fk-comment-user_id', 'comment');
+        $this->dropForeignKey('fk-comment-post_id', 'comment');
+
+        $this->dropTable('user');
+        $this->dropTable('role');
+        $this->dropTable('post');
+        $this->dropTable('category');
+        $this->dropTable('image');
+        $this->dropTable('comment');
     }
 }

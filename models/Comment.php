@@ -5,7 +5,7 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "comments".
+ * This is the model class for table "comment".
  *
  * @property int $id
  * @property string|null $text
@@ -14,17 +14,17 @@ use Yii;
  * @property int|null $user_id
  * @property int|null $post_id
  *
- * @property Posts $post
- * @property Users $user
+ * @property Post $post
+ * @property User $user
  */
-class Comments extends \yii\db\ActiveRecord
+class Comment extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'comments';
+        return 'comment';
     }
 
     /**
@@ -38,8 +38,8 @@ class Comments extends \yii\db\ActiveRecord
             [['user_id', 'post_id'], 'default', 'value' => null],
             [['user_id', 'post_id'], 'integer'],
             [['text'], 'string', 'max' => 255],
-            [['post_id'], 'exist', 'skipOnError' => true, 'targetClass' => Posts::className(), 'targetAttribute' => ['post_id' => 'id']],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['user_id' => 'id']],
+            [['post_id'], 'exist', 'skipOnError' => true, 'targetClass' => Post::className(), 'targetAttribute' => ['post_id' => 'id']],
+            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
 
@@ -65,7 +65,7 @@ class Comments extends \yii\db\ActiveRecord
      */
     public function getPost()
     {
-        return $this->hasOne(Posts::className(), ['id' => 'post_id']);
+        return $this->hasOne(Post::className(), ['id' => 'post_id']);
     }
 
     /**
@@ -75,6 +75,6 @@ class Comments extends \yii\db\ActiveRecord
      */
     public function getUser()
     {
-        return $this->hasOne(Users::className(), ['id' => 'user_id']);
+        return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
 }

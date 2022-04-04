@@ -5,21 +5,21 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "categories".
+ * This is the model class for table "category".
  *
  * @property int $id
  * @property string|null $name
  *
- * @property Posts[] $posts
+ * @property Post[] $posts
  */
-class Categories extends \yii\db\ActiveRecord
+class Category extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'categories';
+        return 'category';
     }
 
     /**
@@ -50,6 +50,6 @@ class Categories extends \yii\db\ActiveRecord
      */
     public function getPosts()
     {
-        return $this->hasMany(Posts::className(), ['category_id' => 'id']);
+        return $this->hasMany(Post::className(), ['category_id' => 'id']);
     }
 }

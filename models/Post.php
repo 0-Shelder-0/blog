@@ -5,7 +5,7 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "posts".
+ * This is the model class for table "post".
  *
  * @property int $id
  * @property string|null $title
@@ -15,18 +15,18 @@ use Yii;
  * @property int|null $image_id
  * @property int|null $category_id
  *
- * @property Categories $category
- * @property Comments[] $comments
- * @property Images $image
+ * @property Category $category
+ * @property Comment[] $comments
+ * @property Image $image
  */
-class Posts extends \yii\db\ActiveRecord
+class Post extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'posts';
+        return 'post';
     }
 
     /**
@@ -40,8 +40,8 @@ class Posts extends \yii\db\ActiveRecord
             [['image_id', 'category_id'], 'default', 'value' => null],
             [['image_id', 'category_id'], 'integer'],
             [['title', 'content'], 'string', 'max' => 255],
-            [['category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Categories::className(), 'targetAttribute' => ['category_id' => 'id']],
-            [['image_id'], 'exist', 'skipOnError' => true, 'targetClass' => Images::className(), 'targetAttribute' => ['image_id' => 'id']],
+            [['category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Category::className(), 'targetAttribute' => ['category_id' => 'id']],
+            [['image_id'], 'exist', 'skipOnError' => true, 'targetClass' => Image::className(), 'targetAttribute' => ['image_id' => 'id']],
         ];
     }
 
@@ -68,7 +68,7 @@ class Posts extends \yii\db\ActiveRecord
      */
     public function getCategory()
     {
-        return $this->hasOne(Categories::className(), ['id' => 'category_id']);
+        return $this->hasOne(Category::className(), ['id' => 'category_id']);
     }
 
     /**
@@ -78,7 +78,7 @@ class Posts extends \yii\db\ActiveRecord
      */
     public function getComments()
     {
-        return $this->hasMany(Comments::className(), ['post_id' => 'id']);
+        return $this->hasMany(Comment::className(), ['post_id' => 'id']);
     }
 
     /**
@@ -88,6 +88,6 @@ class Posts extends \yii\db\ActiveRecord
      */
     public function getImage()
     {
-        return $this->hasOne(Images::className(), ['id' => 'image_id']);
+        return $this->hasOne(Image::className(), ['id' => 'image_id']);
     }
 }
