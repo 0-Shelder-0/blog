@@ -2,13 +2,15 @@
 
 namespace app\controllers;
 
+use app\models\Category;
+use app\models\CommentForm;
+use app\models\ContactForm;
+use app\models\Post;
 use Yii;
 use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\Response;
-use yii\filters\VerbFilter;
-use app\models\LoginForm;
-use app\models\ContactForm;
 
 class SiteController extends Controller
 {
@@ -65,40 +67,6 @@ class SiteController extends Controller
     }
 
     /**
-     * Login action.
-     *
-     * @return Response|string
-     */
-    public function actionLogin()
-    {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
-
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
-        }
-
-        $model->password = '';
-        return $this->render('login', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Logout action.
-     *
-     * @return Response
-     */
-    public function actionLogout()
-    {
-        Yii::$app->user->logout();
-
-        return $this->goHome();
-    }
-
-    /**
      * Displays contact page.
      *
      * @return Response|string
@@ -124,5 +92,57 @@ class SiteController extends Controller
     public function actionAbout()
     {
         return $this->render('about');
+    }
+
+    public function actionView($id)
+    {
+        $post = Post::findOne($id);
+        $popular = Post::getPopular();
+        $recent = Post::getRecent();
+        $categories = Category::getAll();
+        $comments = $post->getComments();
+        $commentForm = new CommentForm();
+
+        $post->viewedCounter();
+
+        return $this->render('single',[
+            '$post'=>$post,
+            'popular'=>$popular,
+            'recent'=>$recent,
+            'categories'=>$categories,
+            'comments'=>$comments,
+            'commentForm'=>$commentForm
+        ]);
+    }
+
+    public function actionCategory($id)
+    {
+        $data = Category::getPostsByCategory($id);
+        $popular = Post::getPopular();
+        $recent = Post::getRecent();
+        $categories = Category::getAll();
+
+        return $this->render('category',[
+            '$posts'=>$data['$posts'],
+            'pagination'=>$data['pagination'],
+            'popular'=>$popular,
+            'recent'=>$recent,
+            'categories'=>$categories
+        ]);
+    }
+
+    public function actionComment($id)
+    {
+        $model = new CommentForm();
+
+        if(Yii::$app->request->isPost)
+        {
+            $model->load(Yii::$app->request->post());
+            if($model->saveComment($id))
+            {
+                Yii::$app->getSession()->setFlash('comment', 'Your comment will be added soon!');
+                return $this->redirect(['site/view','id'=>$id]);
+            }
+        }
     }
 }

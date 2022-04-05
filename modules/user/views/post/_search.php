@@ -8,7 +8,7 @@ use yii\widgets\ActiveForm;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="post-search">
+<div class="article-search">
 
     <?php $form = ActiveForm::begin([
         'action' => ['index'],
@@ -21,17 +21,21 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'content') ?>
 
-    <?= $form->field($model, 'is_deleted')->checkbox() ?>
-
     <?= $form->field($model, 'created_on') ?>
 
-    <?php // echo $form->field($model, 'image_id') ?>
+    <?php // echo $form->field($model, 'image') ?>
+
+    <?php // echo $form->field($model, 'viewed') ?>
+
+    <?php // echo $form->field($model, 'is_deleted') ?>
+
+    <?php // echo $form->field($model, 'user_id') ?>
 
     <?php // echo $form->field($model, 'category_id') ?>
 
     <div class="form-group">
         <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>
-        <?= Html::resetButton('Reset', ['class' => 'btn btn-outline-secondary']) ?>
+        <?= Html::resetButton('Reset', ['class' => 'btn btn-default']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

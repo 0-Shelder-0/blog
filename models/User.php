@@ -27,16 +27,25 @@ class User extends \yii\db\ActiveRecord
         return 'user';
     }
 
+    public static function findByUsername($username): ?User
+    {
+        if (($model = User::findOne(['login' => $username])) !== null) {
+            return $model;
+        }
+
+        return null;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['created_on'], 'safe'],
-            [['is_deleted'], 'boolean'],
+            [['is_deleted'], 'default', 'value' => false],
             [['role_id'], 'default', 'value' => null],
             [['role_id'], 'integer'],
+            [['created_on'], 'default', 'value' => date('Y-m-d')],
             [['login', 'password_hash'], 'string', 'max' => 255],
             [['role_id'], 'exist', 'skipOnError' => true, 'targetClass' => Role::className(), 'targetAttribute' => ['role_id' => 'id']],
         ];
@@ -57,6 +66,11 @@ class User extends \yii\db\ActiveRecord
         ];
     }
 
+    public function passwordIsValid($password): bool
+    {
+        return Yii::$app->getSecurity()->validatePassword($password, $this->password_hash);
+    }
+
     /**
      * Gets query for [[Comments]].
      *
@@ -75,5 +89,10 @@ class User extends \yii\db\ActiveRecord
     public function getRole()
     {
         return $this->hasOne(Role::className(), ['id' => 'role_id']);
+    }
+
+    public function validatePassword($password): bool
+    {
+        return $this->passwordIsValid($password);
     }
 }

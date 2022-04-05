@@ -31,10 +31,12 @@ class m220404_153136_initial extends Migration
             'id' => $this->primaryKey(),
             'title' => $this->string(),
             'content' => $this->string(),
+            'viewed' => $this->integer(),
             'is_deleted' => $this->boolean(),
             'created_on' => $this->dateTime(),
             'image_id' => $this->integer(),
             'category_id' => $this->integer(),
+            'user_id' => $this->integer(),
         ]);
 
         $this->createTable('category', [
@@ -72,6 +74,12 @@ class m220404_153136_initial extends Migration
             'idx-post-category_id',
             'post',
             'category_id'
+        );
+
+        $this->createIndex(
+            'idx-post-user_id',
+            'post',
+            'user_id'
         );
 
         $this->createIndex(
@@ -114,6 +122,15 @@ class m220404_153136_initial extends Migration
         );
 
         $this->addForeignKey(
+            'fk-post-user_id',
+            'post',
+            'user_id',
+            'user',
+            'id',
+            'RESTRICT'
+        );
+
+        $this->addForeignKey(
             'fk-comment-user_id',
             'comment',
             'user_id',
@@ -140,11 +157,13 @@ class m220404_153136_initial extends Migration
         $this->dropIndex('idx-user-role_id', 'user');
         $this->dropIndex('idx-post-image_id', 'post');
         $this->dropIndex('idx-post-category_id', 'post');
+        $this->dropIndex('idx-post-user_id', 'post');
         $this->dropIndex('idx-comment-user_id', 'comment');
         $this->dropIndex('idx-comment-post_id', 'comment');
 
         $this->dropForeignKey('fk-user-role_id', 'user');
         $this->dropForeignKey('fk-post-image_id', 'post');
+        $this->dropForeignKey('fk-post-user_id', 'post');
         $this->dropForeignKey('fk-post-category_id', 'post');
         $this->dropForeignKey('fk-comment-user_id', 'comment');
         $this->dropForeignKey('fk-comment-post_id', 'comment');

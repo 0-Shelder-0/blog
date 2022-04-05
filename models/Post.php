@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\data\Pagination;
 
 /**
  * This is the model class for table "post".
@@ -10,10 +11,12 @@ use Yii;
  * @property int $id
  * @property string|null $title
  * @property string|null $content
+ * @property int|null $viewed
  * @property bool|null $is_deleted
  * @property string|null $created_on
  * @property int|null $image_id
  * @property int|null $category_id
+ * @property int|null $user_id
  *
  * @property Category $category
  * @property Comment[] $comments
@@ -54,11 +57,42 @@ class Post extends \yii\db\ActiveRecord
             'id' => 'ID',
             'title' => 'Title',
             'content' => 'Content',
+            'viewed' => 'Viewed',
             'is_deleted' => 'Is Deleted',
             'created_on' => 'Created On',
             'image_id' => 'Image ID',
             'category_id' => 'Category ID',
         ];
+    }
+
+    public static function getAll($pageSize = 5)
+    {
+        $query = Post::find();
+        $count = $query->count();
+        $pagination = new Pagination(['totalCount' => $count, 'pageSize'=>$pageSize]);
+        $posts = $query->offset($pagination->offset)
+            ->limit($pagination->limit)
+            ->all();
+
+        $data['posts'] = $posts;
+        $data['pagination'] = $pagination;
+
+        return $data;
+    }
+
+    public static function getPopular()
+    {
+        return Post::find()->orderBy('viewed desc')->limit(3)->all();
+    }
+
+    public static function getRecent()
+    {
+        return Post::find()->orderBy('created_on asc')->limit(4)->all();
+    }
+
+    public function getDate()
+    {
+        return Yii::$app->formatter->asDate($this->created_on);
     }
 
     /**
@@ -88,6 +122,23 @@ class Post extends \yii\db\ActiveRecord
      */
     public function getImage()
     {
-        return $this->hasOne(Image::className(), ['id' => 'image_id']);
+        $image = $this->hasOne(Image::className(), ['id' => 'image_id'])->one();
+        return ($image) ? $image->url : '/no-image.png';
+    }
+
+    public function viewedCounter()
+    {
+        $this->viewed += 1;
+        return $this->save(false);
+    }
+
+    public function saveCategory($category_id)
+    {
+        $category = Category::findOne($category_id);
+        if($category != null)
+        {
+            $this->link('category', $category);
+            return true;
+        }
     }
 }

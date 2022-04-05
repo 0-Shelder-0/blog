@@ -4,6 +4,7 @@ namespace app\models;
 
 use Yii;
 use yii\base\Model;
+use yii\web\NotFoundHttpException;
 
 /**
  * LoginForm is the model behind the login form.
@@ -17,7 +18,7 @@ class LoginForm extends Model
     public $password;
     public $rememberMe = true;
 
-    private $_user = false;
+    private $_user = null;
 
 
     /**
@@ -56,6 +57,7 @@ class LoginForm extends Model
     /**
      * Logs in a user using the provided username and password.
      * @return bool whether the user is logged in successfully
+     * @throws NotFoundHttpException
      */
     public function login()
     {
@@ -69,10 +71,11 @@ class LoginForm extends Model
      * Finds user by [[username]]
      *
      * @return User|null
+     * @throws NotFoundHttpException
      */
-    public function getUser()
+    public function getUser(): ?User
     {
-        if ($this->_user === false) {
+        if ($this->_user === null) {
             $this->_user = User::findByUsername($this->username);
         }
 
