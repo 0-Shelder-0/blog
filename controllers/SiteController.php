@@ -4,13 +4,11 @@ namespace app\controllers;
 
 use app\models\Category;
 use app\models\CommentForm;
-use app\models\ContactForm;
 use app\models\Post;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
-use yii\web\Response;
 
 class SiteController extends Controller
 {
@@ -75,34 +73,6 @@ class SiteController extends Controller
             'recent' => $recent,
             'categories' => $categories
         ]);
-    }
-
-    /**
-     * Displays contact page.
-     *
-     * @return Response|string
-     */
-    public function actionContact()
-    {
-        $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
-            Yii::$app->session->setFlash('contactFormSubmitted');
-
-            return $this->refresh();
-        }
-        return $this->render('contact', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Displays about page.
-     *
-     * @return string
-     */
-    public function actionAbout()
-    {
-        return $this->render('about');
     }
 
     public function actionView($id)
