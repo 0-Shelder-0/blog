@@ -28,7 +28,26 @@ class RegisterForm extends Model
         return [
             [['username', 'password'], 'required'],
             ['rememberMe', 'boolean'],
+            ['username', 'validateLogin'],
         ];
+    }
+
+    /**
+     * Validates the password.
+     * This method serves as the inline validation for password.
+     *
+     * @param string $attribute the attribute currently being validated
+     * @param array $params the additional name-value pairs given in the rule
+     */
+    public function validateLogin($attribute, $params)
+    {
+        if (!$this->hasErrors()) {
+            $user = $this->getUser();
+
+            if ($user) {
+                $this->addError($attribute, 'User with this login already exists');
+            }
+        }
     }
 
     /**

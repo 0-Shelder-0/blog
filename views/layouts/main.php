@@ -52,8 +52,8 @@ PublicAsset::register($this);
                         <?php else: ?>
                             <?= Html::beginForm(['/auth/logout'], 'post')
                             . Html::submitButton(
-                                'Logout (' . Yii::$app->user->identity->name . ')',
-                                ['class' => 'btn btn-link logout', 'style'=>"padding-top:10px;"]
+                                'Logout ' . Yii::$app->user->identity->login,
+                                ['class' => 'btn btn-link logout', 'style'=>"padding-top:20px;"]
                             )
                             . Html::endForm() ?>
                         <?php endif;?>
@@ -76,7 +76,9 @@ PublicAsset::register($this);
         <div class="row">
             <div class="col-md-6">
                 <aside class="footer-widget">
-                    <div class="about-img"><img src="public/images/logo.png" alt=""></div>
+                    <div class="about-img">
+                        <img src="/public/images/logo.png" alt="">
+                    </div>
                     <div class="about-content">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
                         eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed voluptua. At vero eos et
                         accusam et justo duo dlores et ea rebum magna text ar koto din.
@@ -97,7 +99,7 @@ PublicAsset::register($this);
 
                     <div class="custom-post">
                         <div>
-                            <a href="#"><img src="/public/images/footer-img.png" alt=""></a>
+                            <a href="#"><img src="/public/images/footer-img.png" width="60%" height="60%" alt=""></a>
                         </div>
                         <div>
                             <a href="#" class="text-uppercase">Home is peaceful Place</a>
