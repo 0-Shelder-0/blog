@@ -3,6 +3,7 @@
 namespace app\modules\user\controllers;
 
 use app\models\Category;
+use app\models\ImageUpload;
 use app\models\Post;
 use app\models\PostSearch;
 use Yii;
@@ -10,6 +11,7 @@ use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
 
 /**
  * PostController implements the CRUD actions for Post model.
@@ -76,11 +78,11 @@ class PostController extends Controller
             $model->created_on = date('Y-m-d');
             $model->viewed = 0;
             $model->is_deleted = false;
-            $model->user_id = 0; //todo get user id
+            $model->user_id = Yii::$app->user->id;
 
-        if ($model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
+            if ($model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
         } else {
             $model->loadDefaultValues();
         }
@@ -135,7 +137,7 @@ class PostController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Post::findOne(['id' => $id])) !== null) {
+        if (($model = Post::findOne($id)) !== null) {
             return $model;
         }
 
@@ -145,22 +147,38 @@ class PostController extends Controller
     public function actionSetCategory($id)
     {
         $post = $this->findModel($id);
-        $selectedCategory = $post->category->id;
-        $categories = ArrayHelper::map(Category::find()->all(), 'id', 'title');
+        $selectedCategory = $post->category?->id;
+        $categories = ArrayHelper::map(Category::find()->all(), 'id', 'name');
 
-        if(Yii::$app->request->isPost)
-        {
+        if (Yii::$app->request->isPost) {
             $category = Yii::$app->request->post('category');
-            if($post->saveCategory($category))
+            if ($post->saveCategory($category)) {
+                return $this->redirect(['view', 'id' => $post->id]);
+            }
+        }
+
+        return $this->render('category', [
+            'post' => $post,
+            'selectedCategory' => $selectedCategory,
+            'categories' => $categories
+        ]);
+    }
+
+    public function actionSetImage($id)
+    {
+        $model = new ImageUpload;
+
+        if (Yii::$app->request->isPost)
+        {
+            $post = $this->findModel($id);
+            $file = UploadedFile::getInstance($model, 'image');
+
+            if($post->saveImage($model->uploadFile($file, $post->image_id)))
             {
                 return $this->redirect(['view', 'id'=>$post->id]);
             }
         }
 
-        return $this->render('category', [
-            'post'=>$post,
-            'selectedCategory'=>$selectedCategory,
-            'categories'=>$categories
-        ]);
+        return $this->render('image', ['model'=>$model]);
     }
 }

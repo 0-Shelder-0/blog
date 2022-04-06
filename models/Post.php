@@ -123,7 +123,7 @@ class Post extends \yii\db\ActiveRecord
     public function getImage()
     {
         $image = $this->hasOne(Image::className(), ['id' => 'image_id'])->one();
-        return ($image) ? $image->url : '/no-image.png';
+        return ($image) ? '/' . $image->url : '/no-image.png';
     }
 
     public function viewedCounter()
@@ -140,5 +140,17 @@ class Post extends \yii\db\ActiveRecord
             $this->link('category', $category);
             return true;
         }
+
+        return false;
+    }
+
+    public function saveImage($image_id)
+    {
+        if ($image_id !== null) {
+            $this->image_id = $image_id;
+            return $this->save(false);
+        }
+
+        return false;
     }
 }
