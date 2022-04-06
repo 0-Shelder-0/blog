@@ -51,9 +51,9 @@ class Category extends \yii\db\ActiveRecord
 
     public static function getPostsByCategory($id)
     {
-        $query = Post::find()->where(['category_id'=>$id]);
+        $query = Post::find()->where(['category_id' => $id]);
         $count = $query->count();
-        $pagination = new Pagination(['totalCount' => $count, 'pageSize'=>6]);
+        $pagination = new Pagination(['totalCount' => $count, 'pageSize' => 6]);
         $posts = $query->offset($pagination->offset)
             ->limit($pagination->limit)
             ->all();
@@ -72,5 +72,10 @@ class Category extends \yii\db\ActiveRecord
     public function getPosts()
     {
         return $this->hasMany(Post::className(), ['category_id' => 'id']);
+    }
+
+    public function getPostsCount()
+    {
+        return $this->getPosts()->count();
     }
 }

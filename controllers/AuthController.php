@@ -49,7 +49,7 @@ class AuthController extends Controller
                 $login_model->rememberMe = $model->rememberMe;
 
                 if ($login_model->login()) {
-                    return $this->goBack();
+                    return $this->redirect(['site/home']);
                 }
 
                 return $this->redirect(['auth/login']);

@@ -63,7 +63,18 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $data = Post::getAll();
+        $popular = Post::getPopular();
+        $recent = Post::getRecent();
+        $categories = Category::getAll();
+
+        return $this->render('index',[
+            'posts'=>$data['posts'],
+            'pagination'=>$data['pagination'],
+            'popular'=>$popular,
+            'recent'=>$recent,
+            'categories'=>$categories
+        ]);
     }
 
     /**

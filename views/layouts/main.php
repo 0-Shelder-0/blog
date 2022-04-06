@@ -1,77 +1,122 @@
 <?php
 
-/** @var yii\web\View $this */
-/** @var string $content */
+/* @var $this \yii\web\View */
+/* @var $content string */
 
-use app\assets\AppAsset;
-use app\widgets\Alert;
-use yii\bootstrap4\Breadcrumbs;
-use yii\bootstrap4\Html;
-use yii\bootstrap4\Nav;
-use yii\bootstrap4\NavBar;
+use app\assets\PublicAsset;
+use yii\helpers\Html;
+use yii\helpers\Url;
 
-AppAsset::register($this);
+PublicAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
-<html lang="<?= Yii::$app->language ?>" class="h-100">
+<html lang="<?= Yii::$app->language ?>">
 <head>
     <meta charset="<?= Yii::$app->charset ?>">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <?php $this->registerCsrfMetaTags() ?>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
 </head>
-<body class="d-flex flex-column h-100">
+<body>
 <?php $this->beginBody() ?>
 
-<header>
-    <?php
-    NavBar::begin([
-        'brandLabel' => Yii::$app->name,
-        'brandUrl' => Yii::$app->homeUrl,
-        'options' => [
-            'class' => 'navbar navbar-expand-md navbar-dark bg-dark fixed-top',
-        ],
-    ]);
-    echo Nav::widget([
-        'options' => ['class' => 'navbar-nav'],
-        'items' => [
-            ['label' => 'Home', 'url' => ['/site/index']],
-            ['label' => 'About', 'url' => ['/site/about']],
-            ['label' => 'Contact', 'url' => ['/site/contact']],
-            Yii::$app->user->isGuest ? (
-                ['label' => 'Login', 'url' => ['/site/login']]
-            ) : (
-                '<li>'
-                . Html::beginForm(['/site/logout'], 'post', ['class' => 'form-inline'])
-                . Html::submitButton(
-                    'Logout (' . Yii::$app->user->identity->username . ')',
-                    ['class' => 'btn btn-link logout']
-                )
-                . Html::endForm()
-                . '</li>'
-            )
-        ],
-    ]);
-    NavBar::end();
-    ?>
-</header>
-
-<main role="main" class="flex-shrink-0">
+<nav class="navbar main-menu navbar-default">
     <div class="container">
-        <?= Breadcrumbs::widget([
-            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-        ]) ?>
-        <?= Alert::widget() ?>
-        <?= $content ?>
+        <div class="menu-content">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                        data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/"><img src="/public/images/logo.png" alt=""></a>
+            </div>
+
+
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+                <ul class="nav navbar-nav text-uppercase">
+                    <li><a data-toggle="dropdown" class="dropdown-toggle" href="/">Home</a>
+
+                    </li>
+                </ul>
+                <div class="i_con">
+                    <ul class="nav navbar-nav text-uppercase">
+                        <?php if(Yii::$app->user->isGuest):?>
+                            <li><a href="<?= Url::toRoute(['auth/login'])?>">Login</a></li>
+                            <li><a href="<?= Url::toRoute(['auth/register'])?>">Register</a></li>
+                        <?php else: ?>
+                            <?= Html::beginForm(['/auth/logout'], 'post')
+                            . Html::submitButton(
+                                'Logout (' . Yii::$app->user->identity->name . ')',
+                                ['class' => 'btn btn-link logout', 'style'=>"padding-top:10px;"]
+                            )
+                            . Html::endForm() ?>
+                        <?php endif;?>
+                    </ul>
+                </div>
+
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
     </div>
-</main>
+    <!-- /.container-fluid -->
+</nav>
 
-<footer class="footer mt-auto py-3 text-muted">
+
+<?= $content ?>
+
+
+<footer class="footer-widget-section">
     <div class="container">
-        <p class="float-left">&copy; My Company <?= date('Y') ?></p>
-        <p class="float-right"><?= Yii::powered() ?></p>
+        <div class="row">
+            <div class="col-md-6">
+                <aside class="footer-widget">
+                    <div class="about-img"><img src="public/images/logo.png" alt=""></div>
+                    <div class="about-content">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
+                        eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed voluptua. At vero eos et
+                        accusam et justo duo dlores et ea rebum magna text ar koto din.
+                    </div>
+                    <div class="address">
+                        <h4 class="text-uppercase">contact Info</h4>
+                        <p> Phone: +7 000 000-00-00</p>
+                        <p>blog.com</p>
+                        <p>© 2008 - 2022 Yii</p>
+                    </div>
+                </aside>
+            </div>
+
+            <div class="col-md-6">
+                <aside class="footer-widget">
+                    <h3 class="widget-title text-uppercase">Custom Category Post</h3>
+
+
+                    <div class="custom-post">
+                        <div>
+                            <a href="#"><img src="/public/images/footer-img.png" alt=""></a>
+                        </div>
+                        <div>
+                            <a href="#" class="text-uppercase">Home is peaceful Place</a>
+                            <span class="p-date">March 24, 2022</span>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </div>
+    <div class="footer-copy">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="text-center">© 2008 - 2022 <a href="https://www.yiiframework.com/">Yii </a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </footer>
 
