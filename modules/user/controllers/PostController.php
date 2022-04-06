@@ -46,6 +46,7 @@ class PostController extends Controller
         }
 
         $searchModel = new PostSearch();
+        $searchModel->user_id = Yii::$app->user->id;
         $dataProvider = $searchModel->search($this->request->queryParams);
 
         return $this->render('index', [

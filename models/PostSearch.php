@@ -42,9 +42,6 @@ class PostSearch extends Post
     public function search($params)
     {
         $query = Post::find();
-
-        // add conditions that should always apply here
-
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
@@ -64,6 +61,7 @@ class PostSearch extends Post
             'created_on' => $this->created_on,
             'image_id' => $this->image_id,
             'category_id' => $this->category_id,
+            'user_id' => $this->user_id,
         ]);
 
         $query->andFilterWhere(['ilike', 'title', $this->title])

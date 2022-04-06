@@ -85,7 +85,7 @@ class Post extends \yii\db\ActiveRecord
      */
     public function getComments()
     {
-        return $this->hasMany(Comment::className(), ['post_id' => 'id'])->where(['is_deleted' => false]);
+        return $this->hasMany(Comment::className(), ['post_id' => 'id']);
     }
 
     /**
@@ -107,6 +107,11 @@ class Post extends \yii\db\ActiveRecord
     public function getUser()
     {
         return $this->hasOne(User::className(), ['id' => 'user_id']);
+    }
+
+    public function getPostComments()
+    {
+        return $this->getComments()->where(['is_deleted' => false])->all();
     }
 
     public static function getAll($pageSize = 5)

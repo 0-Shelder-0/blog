@@ -14,28 +14,6 @@
     }());
 
 
-
-    /*=== single blog carousel =====*/
-    (function () {
-        $('.items').owlCarousel({
-            items: 3,
-            autoPlay: true,
-            pagination: false
-        });
-    }());
-
-    /* === Instagram Widget === */
-
-    (function () {
-        $('#widget-feature').owlCarousel({
-            singleItem: true,
-            navigation: true,
-            navigationText: ["<i class='fa fa-angle-left'></i>", "<i class='fa fa-angle-right'></i>"],
-            autoPlay: true,
-            pagination: false
-        });
-    }());
-
     /* === Back To Top === */
 
     (function () {
@@ -46,16 +24,6 @@
     }());
 
 
-    /* === Footer Instagram === */
-
-    (function () {
-        $('#footer-instagram').owlCarousel({
-            items: 8,
-            navigation: false,
-            autoPlay: false,
-            pagination: false
-        });
-    }());
     /* === Search === */
 
     (function () {
@@ -66,9 +34,18 @@
         });
     }());
 
-
-
-
 })(jQuery);
 
 
+function addUserName(event) {
+    const id = event.target.id.split('-')[1];
+    const item = document.getElementById(`comment-login-${id}`);
+    const userName = item.innerText;
+
+    const newComment = document.getElementById('new-comment');
+    if (!newComment.innerText.includes(userName)) {
+        newComment.innerText = `${userName}, ${newComment.innerText}`
+    }
+
+    focus(newComment);
+}

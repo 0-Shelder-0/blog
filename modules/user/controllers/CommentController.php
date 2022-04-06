@@ -42,6 +42,7 @@ class CommentController extends Controller
         }
 
         $searchModel = new CommentSearch();
+        $searchModel->user_id = Yii::$app->user->id;
         $dataProvider = $searchModel->search($this->request->queryParams);
 
         return $this->render('index', [
@@ -79,12 +80,14 @@ class CommentController extends Controller
 
         $model = new Comment();
 
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
+        if ($this->request->isPost && $model->load($this->request->post())) {
+            $model->created_on = date('Y-m-d');
+            $model->is_deleted = false;
+            $model->user_id = Yii::$app->user->id;
+
+            if ($model->save()) {
                 return $this->redirect(['view', 'id' => $model->id]);
             }
-        } else {
-            $model->loadDefaultValues();
         }
 
         return $this->render('create', [

@@ -1,5 +1,7 @@
 <?php
+
 use yii\helpers\Url;
+
 ?>
 <!--main content start-->
 <div class="main-content">
@@ -8,16 +10,22 @@ use yii\helpers\Url;
             <div class="col-md-8">
                 <article class="post">
                     <div class="post-thumb">
-                        <a href="blog.html"><img src="<?= $post->getImage(); ?>" alt=""></a>
+                        <a href="#">
+                            <img src="<?= $post->getImage(); ?>" alt="">
+                        </a>
                     </div>
                     <div class="post-content">
                         <header class="entry-header text-center text-uppercase">
-                            <h6><a href="<?= Url::toRoute(['site/category','id'=>$post->category?->id])?>"> <?= $post->category?->name?></a></h6>
+                            <h6>
+                                <a href="<?= Url::toRoute(['site/category', 'id' => $post->category?->id]) ?>"> <?= $post->category?->name ?></a>
+                            </h6>
 
-                            <h1 class="entry-title"><a href="<?= Url::toRoute(['site/view','id'=>$post->id])?>"><?= $post->title?></a></h1>
+                            <h1 class="entry-title"><a
+                                        href="<?= Url::toRoute(['site/view', 'id' => $post->id]) ?>"><?= $post->title ?></a>
+                            </h1>
                         </header>
                         <div class="entry-content">
-                            <?= $post->content?>
+                            <?= $post->content ?>
                         </div>
                         <div class="decoration">
                             <a href="#" class="btn btn-default">Decoration</a>
@@ -26,7 +34,7 @@ use yii\helpers\Url;
 
                         <div class="social-share">
 							<span
-                                class="social-share-title pull-left text-capitalize">By <?= $post->user?->name?> On <?= $post->getDate();?></span>
+                                    class="social-share-title pull-left text-capitalize">By <?= $post->user?->login ?> On <?= $post->getDate(); ?></span>
                             <ul class="text-center pull-right">
                                 <li><a class="s-facebook" href="#"><i class="fa fa-facebook"></i></a></li>
                                 <li><a class="s-twitter" href="#"><i class="fa fa-twitter"></i></a></li>
@@ -38,17 +46,17 @@ use yii\helpers\Url;
                     </div>
                 </article>
 
-             <?= $this->render('/partials/comment', [
-                 'post'=>$post,
-                 'comments'=>$comments,
-                 'commentForm'=>$commentForm
-             ])?>
+                <?= $this->render('/partials/comment', [
+                    'post' => $post,
+                    'comments' => $comments,
+                    'commentForm' => $commentForm
+                ]) ?>
             </div>
             <?= $this->render('/partials/sidebar', [
-                'popular'=>$popular,
-                'recent'=>$recent,
-                'categories'=>$categories
-            ]);?>
+                'popular' => $popular,
+                'recent' => $recent,
+                'categories' => $categories
+            ]); ?>
         </div>
     </div>
 </div>
