@@ -85,7 +85,7 @@ class Post extends \yii\db\ActiveRecord
      */
     public function getComments()
     {
-        return $this->hasMany(Comment::className(), ['post_id' => 'id']);
+        return $this->hasMany(Comment::className(), ['post_id' => 'id'])->where(['is_deleted' => false]);
     }
 
     /**
@@ -111,10 +111,11 @@ class Post extends \yii\db\ActiveRecord
 
     public static function getAll($pageSize = 5)
     {
-        $query = Post::find();
+        $query = Post::getNotDeletedPosts();
         $count = $query->count();
-        $pagination = new Pagination(['totalCount' => $count, 'pageSize'=>$pageSize]);
-        $posts = $query->offset($pagination->offset)
+        $pagination = new Pagination(['totalCount' => $count, 'pageSize' => $pageSize]);
+        $posts = $query
+            ->offset($pagination->offset)
             ->limit($pagination->limit)
             ->all();
 
@@ -126,12 +127,12 @@ class Post extends \yii\db\ActiveRecord
 
     public static function getPopular()
     {
-        return Post::find()->orderBy('viewed desc')->limit(3)->all();
+        return Post::getNotDeletedPosts()->orderBy('viewed desc')->limit(3)->all();
     }
 
     public static function getRecent()
     {
-        return Post::find()->orderBy('created_on asc')->limit(4)->all();
+        return Post::getNotDeletedPosts()->orderBy('created_on asc')->limit(4)->all();
     }
 
     public function getDate()
@@ -148,8 +149,7 @@ class Post extends \yii\db\ActiveRecord
     public function saveCategory($category_id)
     {
         $category = Category::findOne($category_id);
-        if($category != null)
-        {
+        if ($category != null) {
             $this->link('category', $category);
             return true;
         }
@@ -165,5 +165,10 @@ class Post extends \yii\db\ActiveRecord
         }
 
         return false;
+    }
+
+    private static function getNotDeletedPosts()
+    {
+        return Post::find()->where(['is_deleted' => false]);
     }
 }

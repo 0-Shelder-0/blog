@@ -2,8 +2,10 @@
 
 namespace app\modules\admin\controllers;
 
+use app\models\Claim;
 use app\models\Role;
 use app\models\RoleSearch;
+use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -33,11 +35,13 @@ class RoleController extends Controller
 
     /**
      * Lists all Role models.
-     *
-     * @return string
      */
     public function actionIndex()
     {
+        if ($this->userNotAdmin()) {
+            return $this->goHome();
+        }
+
         $searchModel = new RoleSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
@@ -50,11 +54,14 @@ class RoleController extends Controller
     /**
      * Displays a single Role model.
      * @param int $id ID
-     * @return string
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
     {
+        if ($this->userNotAdmin()) {
+            return $this->goHome();
+        }
+
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -67,6 +74,10 @@ class RoleController extends Controller
      */
     public function actionCreate()
     {
+        if ($this->userNotAdmin()) {
+            return $this->goHome();
+        }
+
         $model = new Role();
 
         if ($this->request->isPost) {
@@ -91,6 +102,10 @@ class RoleController extends Controller
      */
     public function actionUpdate($id)
     {
+        if ($this->userNotAdmin()) {
+            return $this->goHome();
+        }
+
         $model = $this->findModel($id);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
@@ -111,6 +126,10 @@ class RoleController extends Controller
      */
     public function actionDelete($id)
     {
+        if ($this->userNotAdmin()) {
+            return $this->goHome();
+        }
+
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
@@ -130,5 +149,13 @@ class RoleController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    /**
+     * @return bool
+     */
+    private function userNotAdmin(): bool
+    {
+        return Yii::$app->user->isGuest || Yii::$app->user->identity->role->claim !== Claim::ADMIN->value;
     }
 }

@@ -38,11 +38,13 @@ class PostController extends Controller
 
     /**
      * Lists all Post models.
-     *
-     * @return string
      */
     public function actionIndex()
     {
+        if (Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+
         $searchModel = new PostSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
@@ -55,11 +57,14 @@ class PostController extends Controller
     /**
      * Displays a single Post model.
      * @param int $id ID
-     * @return string
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
     {
+        if (Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -72,6 +77,10 @@ class PostController extends Controller
      */
     public function actionCreate()
     {
+        if (Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+
         $model = new Post();
 
         if ($this->request->isPost && $model->load($this->request->post())) {
@@ -101,6 +110,10 @@ class PostController extends Controller
      */
     public function actionUpdate($id)
     {
+        if (Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+
         $model = $this->findModel($id);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
@@ -121,6 +134,10 @@ class PostController extends Controller
      */
     public function actionDelete($id)
     {
+        if (Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+
         $model = $this->findModel($id);
         $model->is_deleted = true;
         $model->save();
@@ -146,6 +163,10 @@ class PostController extends Controller
 
     public function actionSetCategory($id)
     {
+        if (Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+
         $post = $this->findModel($id);
         $selectedCategory = $post->category?->id;
         $categories = ArrayHelper::map(Category::find()->all(), 'id', 'name');
@@ -166,6 +187,10 @@ class PostController extends Controller
 
     public function actionSetImage($id)
     {
+        if (Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+
         $model = new ImageUpload;
 
         if (Yii::$app->request->isPost)

@@ -4,6 +4,7 @@ namespace app\modules\user\controllers;
 
 use app\models\Comment;
 use app\models\CommentSearch;
+use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -33,11 +34,13 @@ class CommentController extends Controller
 
     /**
      * Lists all Comment models.
-     *
-     * @return string
      */
     public function actionIndex()
     {
+        if (Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+
         $searchModel = new CommentSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
@@ -50,11 +53,14 @@ class CommentController extends Controller
     /**
      * Displays a single Comment model.
      * @param int $id ID
-     * @return string
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
     {
+        if (Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -67,6 +73,10 @@ class CommentController extends Controller
      */
     public function actionCreate()
     {
+        if (Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+
         $model = new Comment();
 
         if ($this->request->isPost) {
@@ -91,6 +101,10 @@ class CommentController extends Controller
      */
     public function actionUpdate($id)
     {
+        if (Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+
         $model = $this->findModel($id);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
@@ -111,6 +125,10 @@ class CommentController extends Controller
      */
     public function actionDelete($id)
     {
+        if (Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+
         $model = $this->findModel($id);
         $model->is_deleted = true;
         $model->save();
